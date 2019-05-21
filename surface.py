@@ -34,6 +34,7 @@ class Surface(ttk.Frame):
 		ttk.Label(frame_right1, text='车牌位置：').grid(column=0, row=0, sticky=tk.W)
 		
 		from_pic_ctl = ttk.Button(frame_right2, text="来自图片", width=20, command=self.from_pic)
+		from_vedio_ctl = ttk.Button(frame_right2, text="来自本地视频", width=20, command=self.from_vedio)
 		from_vedio_ctl = ttk.Button(frame_right2, text="来自摄像头", width=20, command=self.from_vedio)
 		self.image_ctl = ttk.Label(frame_left)
 		self.image_ctl.pack(anchor="nw")
