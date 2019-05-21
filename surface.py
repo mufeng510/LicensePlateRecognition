@@ -12,6 +12,7 @@ import time
 
 class Surface(ttk.Frame):
 	pic_path = ""
+	video_path = ""
 	viewhigh = 600
 	viewwide = 600
 	update_time = 0
@@ -25,7 +26,7 @@ class Surface(ttk.Frame):
 		frame_left = ttk.Frame(self)
 		frame_right1 = ttk.Frame(self)
 		frame_right2 = ttk.Frame(self)
-		win.title("车牌识别")
+		win.title("基于Python+OpenCV的车牌识别")
 		win.state("zoomed")
 		self.pack(fill=tk.BOTH, expand=tk.YES, padx="5", pady="5")
 		frame_left.pack(side=LEFT,expand=1,fill=BOTH)
@@ -36,7 +37,7 @@ class Surface(ttk.Frame):
 		
 		from_pic_ctl = ttk.Button(frame_right2, text="来自图片", width=20, command=self.from_pic)
 		from_vedio_ctl = ttk.Button(frame_right2, text="来自摄像头", width=20, command=self.from_vedio)
-		from_vedio_ct2 = ttk.Button(frame_right2, text="来自本地视频", width=20, command=self.from_vedio)
+		from_vedio_ct2 = ttk.Button(frame_right2, text="来自本地视频", width=20, command=self.from_local_video)
 		self.image_ctl = ttk.Label(frame_left)
 		self.image_ctl.pack(anchor="nw")
 		
@@ -88,7 +89,7 @@ class Surface(ttk.Frame):
 			self.roi_ctl.configure(state='disabled')
 			self.r_ctl.configure(text="")
 			self.color_ctl.configure(state='disabled')
-		
+	#从摄像头读取
 	def from_vedio(self):
 		if self.thread_run:
 			return
@@ -102,10 +103,30 @@ class Surface(ttk.Frame):
 		self.thread.setDaemon(True)
 		self.thread.start()
 		self.thread_run = True
-		
+	#从本地视频读取
+	def from_local_video(self):
+		self.thread_run = False
+		self.video_path = askopenfilename(title="选择识别视频",filetypes=[("mp4视频","*.mp4")])
+		print(self.video_path)
+		cap = cv2.VideoCapture(self.video_path)
+		predict_time = time.time()
+		reading = True
+		while reading:
+			_, img_bgr = cap.read()
+			self.imgtk = self.get_imgtk(img_bgr)
+			self.image_ctl.configure(image=self.imgtk)
+			if time.time() - predict_time > 2:
+				r, roi, color = self.predictor.predict(img_bgr)
+				self.show_roi(r, roi, color)
+				predict_time = time.time()
+				reading = False
+		print("run end")
+
+	#从图片读取
 	def from_pic(self):
 		self.thread_run = False
 		self.pic_path = askopenfilename(title="选择识别图片", filetypes=[("jpg图片", "*.jpg")])
+		#print(self.pic_path)
 		if self.pic_path:
 			img_bgr = predict.imreadex(self.pic_path)
 			self.imgtk = self.get_imgtk(img_bgr)
