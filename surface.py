@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter.filedialog import *
 from tkinter import ttk
+import tkinter.messagebox as mBox
 import predict
 import cv2
 from PIL import Image, ImageTk
@@ -34,8 +35,8 @@ class Surface(ttk.Frame):
 		ttk.Label(frame_right1, text='车牌位置：').grid(column=0, row=0, sticky=tk.W)
 		
 		from_pic_ctl = ttk.Button(frame_right2, text="来自图片", width=20, command=self.from_pic)
-		from_vedio_ctl = ttk.Button(frame_right2, text="来自本地视频", width=20, command=self.from_vedio)
 		from_vedio_ctl = ttk.Button(frame_right2, text="来自摄像头", width=20, command=self.from_vedio)
+		from_vedio_ct2 = ttk.Button(frame_right2, text="来自本地视频", width=20, command=self.from_vedio)
 		self.image_ctl = ttk.Label(frame_left)
 		self.image_ctl.pack(anchor="nw")
 		
@@ -47,6 +48,7 @@ class Surface(ttk.Frame):
 		self.color_ctl = ttk.Label(frame_right1, text="", width="20")
 		self.color_ctl.grid(column=0, row=4, sticky=tk.W)
 		from_vedio_ctl.pack(anchor="se", pady="5")
+		from_vedio_ct2.pack(anchor="se", pady="5")
 		from_pic_ctl.pack(anchor="se", pady="5")
 		self.predictor = predict.CardPredictor()
 		self.predictor.train_svm()
