@@ -26,7 +26,7 @@ class Surface(ttk.Frame):
 		frame_left = ttk.Frame(self)
 		frame_right1 = ttk.Frame(self)
 		frame_right2 = ttk.Frame(self)
-		win.title("基于Python+OpenCV的车牌识别")
+		win.title("基于OpenCV+Python的车牌识别")
 		win.state("zoomed")
 		self.pack(fill=tk.BOTH, expand=tk.YES, padx="5", pady="5")
 		frame_left.pack(side=LEFT,expand=1,fill=BOTH)
@@ -109,18 +109,14 @@ class Surface(ttk.Frame):
 		self.video_path = askopenfilename(title="选择识别视频",filetypes=[("mp4视频","*.mp4")])
 		print(self.video_path)
 		cap = cv2.VideoCapture(self.video_path)
-		predict_time = time.time()
 		reading = True
 		while reading:
 			_, img_bgr = cap.read()
 			self.imgtk = self.get_imgtk(img_bgr)
 			self.image_ctl.configure(image=self.imgtk)
-			if time.time() - predict_time > 2:
-				r, roi, color = self.predictor.predict(img_bgr)
-				self.show_roi(r, roi, color)
-				predict_time = time.time()
-				reading = False
-		print("run end")
+			r, roi, color = self.predictor.predict(img_bgr)
+			self.show_roi(r, roi, color)
+        #print("run end")
 
 	#从图片读取
 	def from_pic(self):
